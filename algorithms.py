@@ -3,6 +3,28 @@ from queue import PriorityQueue
 from classes import *
 from utils import *
 
+def breadth_first_search(problem):
+    frontier = PriorityQueue() 
+    start_node = Node(problem.initial_state, None, 0)
+    frontier.put(start_node)
+    explored = set()
+
+    while frontier: # until the frontier is not empty
+        current_node = frontier.get() # remove and returns the first state in the queue 
+        current_state = current_node.state
+
+        if problem.goal_test(current_state):
+            path = current_node.path() 
+            return path
+
+        if current_state not in explored:
+            explored.add(current_state)
+            
+            for next in problem.valid_next(current_state): # iterate over possible next states from the current state
+                next_node = Node(next, current_node, 0)
+                frontier.put(next_node) # enques the next state and the updated path to the frontier
+                
+    return None
 # -------------------------------------------------------------------------------------------------
 
 def astar_search(problem, heuristic):
