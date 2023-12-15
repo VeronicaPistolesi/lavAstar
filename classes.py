@@ -84,3 +84,29 @@ class Node: #We consider the grid as a graph for our search problem
 
     def lt(self, other): # Compare nodes in the queue based on their total cost (path cost + heuristic)
         return (self.path_cost + self.heuristic) < (other.path_cost + other.heuristic)
+    
+#----------------------------------------------------------------------------
+class SimpleSearchAgent:
+    def init(self, problem):
+        self.problem = problem
+        self.state = problem.initial_state
+        self.seq = []
+    
+    def execute_action(self): # Returns and removes the next action from the sequence
+        if self.seq:
+            return self.seq.pop(0)
+        else:
+            return None
+    
+    def execution_time(self):
+        return round(self._execution_time, 6)
+        
+class UninformedSearchAgent(SimpleSearchAgent):
+    def init(self, problem):
+        super().init(problem)
+
+    def search(self, search_algorithm): # Performs the search to find a sequence of actions using the specified algorithm
+        start_time = time.time()
+        self.seq = search_algorithm(self.problem)
+        self._execution_time = time.time() - start_time
+        return self.seq
