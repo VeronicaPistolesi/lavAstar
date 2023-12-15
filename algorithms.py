@@ -98,3 +98,36 @@ def astar_search(problem, heuristic):
                 frontier.put(next_node)
 
     return None
+
+# -------------------------------------------------------------------------------------------------
+
+def greedy_best_first_search(problem, heuristic):
+    frontier = PriorityQueue()
+    start_node = Node(problem.initial_state, None, 0, heuristic(problem.initial_state, problem.goal_state))
+    frontier.put(start_node)
+    explored = set()
+    node_distances = {}  # Dictionary to store g(n) and heuristic values for each node
+    node_solutions = {} # Dictionary to store path to reach each node from the starting node
+
+    while not frontier.empty():
+        current_node = frontier.get()
+        current_state = current_node.state
+
+        h_n = current_node.heuristic  # Save the heuristic value
+
+        if problem.goal_test(current_state):
+            path = current_node.path()
+            return path, node_solutions, node_distances
+
+        if current_state not in explored:
+            explored.add(current_state)
+
+            node_distances[current_state] = {'h(n)': h_n} # Save heuristic value for the current node in the dictionary
+            node_solutions[current_state] = current_node.path() # Save path to reach that node inside dictionary
+
+            for next in problem.valid_next(current_state):
+                heuristic_value = heuristic(next, problem.goal_state)
+                next_node = Node(next, current_node, 0, heuristic_value)
+                frontier.put(next_node)
+
+    return None
