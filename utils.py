@@ -129,3 +129,17 @@ def plot_graph(G):
         plt.title('Two-Dimensional State Space Graph with state coordinates')
         plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
         plt.show()
+
+def plot_graph_distances(G, distances_dict):
+    if G is not None:
+        pos = {node: (node[0], -node[1]) for node in G.nodes()}
+        
+        labels = {}
+        subtitle = 'Each explored node is labeled (g(n), h(n)). NA means the value is \"Not Available\"'
+        
+        for node in G.nodes():
+            node_dict = distances_dict.get(node, {})
+            if 'g(n)' in node_dict and 'h(n)' in node_dict:
+                labels[node] = f"({node_dict['g(n)']}, {node_dict['h(n)']})"
+            elif 'g(n)' in node_dict:
+                labels[node] = (f"({node_dict['g(n)']}, NA)")
