@@ -120,3 +120,43 @@ class InformedSearchAgent(SimpleSearchAgent):
         self.seq, node_solutions, node_distances = search_algorithm(self.problem, heuristic) 
         self._execution_time = time.time() - start_time
         return self.seq, node_solutions, node_distances
+    
+
+#------------------------------------------------------------------------------------------
+
+class LRTAStarAgent:
+
+    def __init__(self, problem):
+        self.problem = problem
+        self.H = {}
+        self.s = None
+        self.a = None
+        self.path = [] # List to store the nodes traversed
+
+    def __call__(self, s1):  # s1 is the percept (current state)
+        self.path.append(s1) # s1 is appended to 'path'
+
+        if self.problem.goal_test(s1): # if s1 == goal, no action is called
+            self.a = None
+            print("Goal reached")
+            return self.a
+        else:
+            if s1 not in self.H: # if s1 isn't in H add it
+                self.H[s1] = manhattan_distance(s1, self.problem.goal_state) # Add to dictionary
+                
+            if self.s is not None: # if s1 has previous state s that it comes from
+                for action in self.problem.actions(self.s): # For each action in the set of valid actions in the state self.s
+                    action_cost = self.LRTA_cost(self.s, action, self.problem.result(self.s, action), self.H) # Calculate the cost of taking the action from the current state self.s
+                    self.H[self.s] = min(action_cost, self.H.get(self.s, float('inf'))) # Update the heuristic value for the current state self.s with the calculated action_cost
+
+            valid_actions_in_s1 = self.problem.actions(s1) # For each action b in the set of actions available in state s1
+            min_cost_action = min(
+                valid_actions_in_s1,
+                key=lambda action: self.LRTA_cost(s1, action, self.problem.result(s1, action), self.H)
+            )
+
+            self.a = min_cost_action # Select the action that minimizes costs in state s1
+
+            self.s = s1
+
+            return self.a
