@@ -52,3 +52,30 @@ STAIR:(13, 13),down
 BRANCH: (1,1,1,1),(2,2,2,2)
 REGION: (0,0,20,80), lit, "ordinary"
 """
+
+#LEVEL 3
+des_file_static_lv3 = """
+MAZE: "mylevel", ' '
+FLAGS: premapped
+GEOMETRY:left,top
+MAP
+|||||||||||||||
+|...L....LL...|
+|..LL.L.....L.|
+|L.....LLL....|
+|.L..L....L...|
+|...LL.L......|
+|L......LL..L.|
+|..L.L........|
+|.L....LL...L.|
+|..L..L...LL..|
+|LL.....L..L..|
+|...LLL......L|
+|.L.....LL...L|
+|...LL.....L..|
+|||||||||||||||
+ENDMAP
+STAIR:(13, 13),down
+BRANCH: (1,1,1,1),(2,2,2,2)
+REGION: (0,0,20,80), lit, "ordinary"
+"""
