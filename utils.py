@@ -82,3 +82,50 @@ def heuristic(state, goal_state, moving_obstacle_position):
 
     return h
 """
+
+# -----------------------------------------------------------------------------------------------
+
+def create_basic_graph(problem, agent_pos):
+    G = nx.Graph()
+
+    for y in range(problem.height):
+        for x in range(problem.width):
+            state = (x, y)
+            terrain_color = problem.grid_colors[y][x]
+
+            if problem.grid[x][y] not in {ord('-'), ord('|')}:  # Excludes walls
+                actions = problem.actions(state)
+                for action in actions:
+                    result_state = problem.result(state, action)
+                    G.add_edge(state, result_state, cost=1)
+                    G.add_node(state, color='purple' if state == agent_pos
+                                            else 'yellow' if state == find_state_coord(problem.grid, ord('>'))
+                                            else 'red' if state in find_lava_coord(problem.grid, ord('}'))
+                                            else 'gray' if state in find_lava_coord(problem.grid, ord('.')) and terrain_color==6 # ice coordinates 
+                                            else 'orange' if state in find_lava_coord(problem.grid, ord('d'))
+                                            else 'lightblue')
+
+    return G
+
+def highlight_explored_nodes(G, explored_nodes):
+    if G is not None:
+        for node, data in G.nodes(data=True):
+            G.nodes[node]['color'] = 'green' if node in explored_nodes else data['color']
+
+    return G
+
+def plot_graph(G):
+    if G is not None:
+        pos = {node: (node[0], -node[1]) for node in G.nodes()}
+        labels = {node: node for node in G.nodes()}
+        node_colors = [data['color'] for node, data in G.nodes(data=True)]
+
+        subtitle = 'Each node is labeled with its coordinates inside the grid'
+
+        plt.figure(figsize=(10, 10))
+        nx.draw(G, pos, with_labels=True, labels=labels, font_size=6, font_color='black', node_size=800,
+                node_color=node_colors, font_weight='bold', edge_color='gray')
+
+        plt.title('Two-Dimensional State Space Graph with state coordinates')
+        plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
+        plt.show()
