@@ -110,3 +110,13 @@ class UninformedSearchAgent(SimpleSearchAgent):
         self.seq = search_algorithm(self.problem)
         self._execution_time = time.time() - start_time
         return self.seq
+
+class InformedSearchAgent(SimpleSearchAgent):
+    def init(self, problem):
+        super().init(problem)
+
+    def search(self, search_algorithm, heuristic):
+        start_time = time.time()
+        self.seq, node_solutions, node_distances = search_algorithm(self.problem, heuristic) 
+        self._execution_time = time.time() - start_time
+        return self.seq, node_solutions, node_distances
