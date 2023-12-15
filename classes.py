@@ -30,6 +30,43 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         valid_dirs = [action_map[next] for next in valid_next]
         return valid_dirs
     
+    def result(self, state, action): # Returns the state that results from executing the action in the given state (=the transition model)
+        x, y = state
+        action_map = {
+            0: (x, y-1),  # N
+            1: (x+1, y),  # E
+            2: (x, y+1),  # S
+            3: (x-1, y)   # W
+        }
+
+        next = action_map.get(action, state)
+        return next if self.is_valid(next) else state
+
+    def goal_test(self, state) -> bool: # Returns True if state is the goal
+        return state == self.goal_state
+
+    def is_valid(self, state) -> bool: #Returns true if the state is valid to step on
+        x, y = state
+        return 0 <= x < self.width and 0 <= y < self.height and self.grid[y][x] not in self.obstacles
+    
+    def step_cost(self, state): # Assigns cost 1 to based on the terrain type
+        x, y = state
+        terrain_type = self.grid[y][x]
+        terrain_color = self.grid_colors[y][x]
+        #print(terrain_type, terrain_color)
+
+        if terrain_type == ord('.') and terrain_color == 6:  #Ice cell
+            return 3
+        if terrain_type == ord('.') and terrain_color == 7:  #normal cell
+            return 1
+        else:
+            return float('inf')  #Default cost for other terrain types
+    
+    def update_grid(self, new_grid): #Reassigns grid (dynamic)
+        self.grid = new_grid
+     
+
+
 #----------------------------------------------------------------------------
 class Node: #We consider the grid as a graph for our search problem
     def init(self, state, parent, path_cost, heuristic=0):
