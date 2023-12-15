@@ -143,3 +143,48 @@ def plot_graph_distances(G, distances_dict):
                 labels[node] = f"({node_dict['g(n)']}, {node_dict['h(n)']})"
             elif 'g(n)' in node_dict:
                 labels[node] = (f"({node_dict['g(n)']}, NA)")
+            elif 'h(n)' in node_dict:
+                labels[node] = (f"(NA, {node_dict['h(n)']})")
+            else:
+                labels[node] = ""  # Use an empty string for both g(n) and h(n) if neither is present
+        
+        node_colors = [data['color'] for node, data in G.nodes(data=True)]
+
+        plt.figure(figsize=(10, 10))
+        nx.draw(G, pos, with_labels=True, labels=labels, font_size=6, font_color='black', node_size=800,
+                node_color=node_colors, font_weight='bold', edge_color='gray')
+
+        plt.title('Two-Dimensional State Space Graph with node distances')
+        plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
+        plt.show()
+
+# -----------------------------------------------------------------------------------------------
+
+"""
+def modify_env(original_matrix):
+    value_mapping = {
+    (2, 5, 0): 124, # wall
+    (1, 0, 0): 46, # floor
+    (10, 0, 0): 64, # agent
+    (6, 2, 0): 68, # monster/ball 
+    (8, 1, 0): 62, # stairs
+    (9, 0, 0): 125 # lava
+}
+    
+    # new 2D matrix with the mapped values
+    mapped_matrix = np.zeros((original_matrix.shape[0], original_matrix.shape[1]))
+
+    for i in range(original_matrix.shape[0]):
+        for j in range(original_matrix.shape[1]):
+            # Get the tuple representing the row in the original matrix
+            row_tuple = tuple(original_matrix[i, j, :])
+
+            # Map the value using the value_mapping dictionary
+            mapped_value = value_mapping.get(row_tuple, 0)
+
+            # Assign the mapped value to the corresponding position in the new matrix
+            mapped_matrix[i, j] = mapped_value
+
+    # Resulting 2D matrix
+    return mapped_matrix
+"""
