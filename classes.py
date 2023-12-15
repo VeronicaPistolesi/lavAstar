@@ -160,3 +160,14 @@ class LRTAStarAgent:
             self.s = s1
 
             return self.a
+        
+    def LRTA_cost(self, s, a, s1, H): #Returns cost to move from state 's' to state 's1' plus estimated cost to get to goal from s1
+        if s1 is None:
+            return manhattan_distance(s, self.problem.goal_state)
+        else:
+            # sometimes we need to get H[s1] which we haven't yet added to H
+            # to replace this try, except: we can initialize H with values from problem.h
+            try:
+                return 1 + self.H[s1]
+            except:
+                return 1 + manhattan_distance(s1, self.problem.goal_state)
