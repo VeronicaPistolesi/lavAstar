@@ -55,3 +55,30 @@ def find_lava_coord(self, value):
                 if self[y][x] == value:
                     lava_pos.append((x, y))
         return lava_pos
+
+
+
+# -----------------------------------------------------------------------------------------------
+
+# Heuristic function: Manhatten Distance
+def manhattan_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> int: 
+    x1, y1 = point1     
+    x2, y2 = point2
+    return abs(x1 - x2) + abs(y1 - y2)
+
+def euclidean_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float:
+    x1, y1 = point1
+    x2, y2 = point2
+    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+
+"""
+def heuristic(state, goal_state, moving_obstacle_position):
+    # Calculate the Manhattan distance between the current state and the goal state
+    h = manhattan_distance(state, goal_state)
+
+    # Penalize the heuristic if the agent's position overlaps with the moving obstacle
+    if state == moving_obstacle_position:
+        h += 100  # Adjust the penalty value as needed
+
+    return h
+"""
