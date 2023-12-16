@@ -41,21 +41,33 @@ def process_matrix(matrix):
     
     return new_matrix
 
-def find_state_coord(self, value):
-        for y in range(len(self)):  # iteration over the rows of the 2-dimensional array, len(self) = number of rows
-            for x in range(len(self[0])):   # iteration over columns; len(self[0]) = gives number of columns
-                if self[y][x] == value:     # check current position in array equals to value
-                    return (x, y)   # tuple containing the coordinates
-        return None
+def find_state_coord(grid, value):
+    for y in range(len(grid)):  # iteration over the rows of the 2-dimensional array, len(grid) = number of rows
+        for x in range(len(grid[0])):   # iteration over columns; len(grid[0]) = gives number of columns
+            if grid[y][x] == value:     # check current position in array equals to value
+                return (x, y)   # tuple containing the coordinates
+    return None
 
-def find_lava_coord(self, value):
-        lava_pos = []
-        for y in range(len(self)):
-            for x in range(len(self[0])):
-                if self[y][x] == value:
-                    lava_pos.append((x, y))
-        return lava_pos
+def find_cells_coord(grid, value):
+    cell_pos = []
+    for y in range(len(grid)):
+        for x in range(len(grid[0])):
+            if grid[y][x] == value:
+                cell_pos.append((x, y))
+    return cell_pos
 
+def cost_computation(grid, grid_colors, solution_path):
+    cost = 0
+    for state in solution_path:
+        x, y = state
+        terrain_type = grid[y][x]
+        terrain_color = grid_colors[y][x]
+
+        if terrain_type == ord('.') and terrain_color == 6:  #Ice cell
+            cost += 3
+        else:
+            cost += 1
+    return cost
 
 
 # -----------------------------------------------------------------------------------------------
@@ -100,9 +112,9 @@ def create_basic_graph(problem, agent_pos):
                     G.add_edge(state, result_state, cost=1)
                     G.add_node(state, color='purple' if state == agent_pos
                                             else 'yellow' if state == find_state_coord(problem.grid, ord('>'))
-                                            else 'red' if state in find_lava_coord(problem.grid, ord('}'))
-                                            else 'gray' if state in find_lava_coord(problem.grid, ord('.')) and terrain_color==6 # ice coordinates 
-                                            else 'orange' if state in find_lava_coord(problem.grid, ord('d'))
+                                            else 'red' if state in find_cells_coord(problem.grid, ord('}'))
+                                            else 'gray' if state in find_cells_coord(problem.grid, ord('.')) and terrain_color==6 # ice coordinates 
+                                            else 'orange' if state in find_cells_coord(problem.grid, ord('d'))
                                             else 'lightblue')
 
     return G

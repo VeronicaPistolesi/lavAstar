@@ -112,8 +112,8 @@ class UninformedSearchAgent(SimpleSearchAgent):
         return self.seq
 
 class InformedSearchAgent(SimpleSearchAgent):
-    def init(self, problem):
-        super().init(problem)
+    def __init__(self, problem):
+        super().__init__(problem)
 
     def search(self, search_algorithm, heuristic):
         start_time = time.time()

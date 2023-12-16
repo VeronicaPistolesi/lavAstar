@@ -91,10 +91,10 @@ def astar_search(problem, heuristic):
 
             for next in problem.valid_next(current_state): # iterate over possible next states from the current state
                 cost = current_node.path_cost + problem.step_cost(next)
-                print(problem.step_cost(next))
+                # print(problem.step_cost(next))
                 heuristic_value = heuristic(next, problem.goal_state)
                 next_node = Node(next, current_node, cost, heuristic_value)
-                print(next_node.state, cost)
+                # print(next_node.state, cost)
                 frontier.put(next_node)
 
     return None
