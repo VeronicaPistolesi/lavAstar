@@ -2,7 +2,7 @@ import time
 from utils import *
 
 class GridWorldProblem: #Each cell in the grid is a state in the problem, and movements between cells are possible actions
-    def init(self, grid, initial_state, goal_state, grid_colors):
+    def __init__(self, grid, initial_state, goal_state, grid_colors):
         self.grid = grid # matrix
         self.grid_colors = grid_colors
         self.width = len(grid[0]) # rows
@@ -69,7 +69,7 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
 
 #----------------------------------------------------------------------------
 class Node: #We consider the grid as a graph for our search problem
-    def init(self, state, parent, path_cost, heuristic=0):
+    def __init__(self, state, parent, path_cost, heuristic=0):
         self.state = state
         self.parent = parent
         self.path_cost = path_cost
@@ -82,12 +82,12 @@ class Node: #We consider the grid as a graph for our search problem
             node = node.parent
         return list(reversed(path_back))
 
-    def lt(self, other): # Compare nodes in the queue based on their total cost (path cost + heuristic)
+    def __lt__(self, other): # Compare nodes in the queue based on their total cost (path cost + heuristic)
         return (self.path_cost + self.heuristic) < (other.path_cost + other.heuristic)
     
 #----------------------------------------------------------------------------
 class SimpleSearchAgent:
-    def init(self, problem):
+    def __init__(self, problem):
         self.problem = problem
         self.state = problem.initial_state
         self.seq = []
@@ -102,8 +102,8 @@ class SimpleSearchAgent:
         return round(self._execution_time, 6)
         
 class UninformedSearchAgent(SimpleSearchAgent):
-    def init(self, problem):
-        super().init(problem)
+    def __init__(self, problem):
+        super().__init__(problem)
 
     def search(self, search_algorithm): # Performs the search to find a sequence of actions using the specified algorithm
         start_time = time.time()
@@ -112,8 +112,8 @@ class UninformedSearchAgent(SimpleSearchAgent):
         return self.seq
 
 class InformedSearchAgent(SimpleSearchAgent):
-    def init(self, problem):
-        super().init(problem)
+    def __init__(self, problem):
+        super().__init__(problem)
 
     def search(self, search_algorithm, heuristic):
         start_time = time.time()
