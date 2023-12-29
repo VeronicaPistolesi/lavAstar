@@ -13,7 +13,7 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
     
     def valid_next(self, state): #Returns a list of all valid next states
         x, y = state
-        possible_next_states = [(x+1, y), (x-1, y), (x, y+1), (x, y-1)] #E W S N
+        possible_next_states = [(x, y-1), (x-1, y), (x, y+1), (x+1, y), (x-1, y-1), (x-1, y+1), (x+1, y+1), (x+1, y-1)] #N E S W NE SE SW NW
         return [next for next in possible_next_states if self.is_valid(next)]
     
     def actions(self, state): # Returns a list of valid actions that can be executed in the given state
@@ -21,9 +21,13 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         valid_next = self.valid_next(state)
         action_map = {
             (x, y-1): 0, #N
-            (x+1, y): 1, #E
+            (x-1, y): 1, #E
             (x, y+1): 2, #S
-            (x-1, y): 3 #W
+            (x+1, y): 3, #W
+            (x-1, y-1): 4, # NE
+            (x-1, y+1): 5, # SE
+            (x+1, y+1): 6, # SW
+            (x+1, y-1): 7 # NW
         }
         #possible_next_states = [(x+1, y), (x-1, y), (x, y+1), (x, y-1)] #E W S N
         #valid_next = [next for next in possible_next_states if self.is_valid(next)]
@@ -34,9 +38,13 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         x, y = state
         action_map = {
             0: (x, y-1),  # N
-            1: (x+1, y),  # E
+            1: (x-1, y),  # E
             2: (x, y+1),  # S
-            3: (x-1, y)   # W
+            3: (x+1, y),   # W
+            4: (x-1, y-1), # NE
+            5: (x-1, y+1), # SE
+            6: (x+1, y+1), # SW
+            7: (x+1, y-1) # NW
         }
 
         next = action_map.get(action, state)
@@ -120,6 +128,12 @@ class InformedSearchAgent(SimpleSearchAgent):
         self.seq, node_solutions, node_distances = search_algorithm(self.problem, heuristic) 
         self._execution_time = time.time() - start_time
         return self.seq, node_solutions, node_distances
+    
+    def search2(self, search_algorithm, heuristic):   # PROVA
+        start_time = time.time()
+        self.seq, node_solutions, node_distances, enemy_positions = search_algorithm(self.problem, heuristic) 
+        self._execution_time = time.time() - start_time
+        return self.seq, node_solutions, node_distances, enemy_positions
     
 
 #------------------------------------------------------------------------------------------

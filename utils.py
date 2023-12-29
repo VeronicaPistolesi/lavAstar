@@ -4,28 +4,42 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import math
 
+# useful for offline search
 def actions_from_path(start: Tuple[int, int], path: List[Tuple[int, int]]) -> List[int]:
     action_map = {
-        "N": 2,
-        "E": 3,
-        "S": 0,
-        "W": 1
+        "N": 0,
+        "E": 1,
+        "S": 2,
+        "W": 3,
+        "NE": 4,
+        "SE": 5,
+        "SW": 6,
+        "NW": 7
     }
     actions = []
+    # x_s, y_s = start
     x_s, y_s = start
     for (x, y) in path:
-        if x_s == x:
+        if x_s > x:
             if y_s > y:
-                actions.append(action_map["S"])
-            else:
-                actions.append(action_map["N"])
-        elif y_s == y:
-            if x_s < x:
+                actions.append(action_map["NW"])
+            elif y_s == y:
                 actions.append(action_map["W"])
-            else:
+            elif y_s < y:
+                actions.append(action_map["SW"])
+        elif x_s < x:
+            if y_s > y:
+                actions.append(action_map["NE"])
+            elif y_s == y:
                 actions.append(action_map["E"])
-        else:
-            raise Exception("x and y can't change at the same time. Oblique moves not allowed!")
+            elif y_s < y:
+                actions.append(action_map["SE"])
+        elif x_s == x:
+            if y_s > y:
+                actions.append(action_map["N"])
+            elif y_s < y:
+                actions.append(action_map["S"])
+            
         x_s = x
         y_s = y
     
@@ -81,7 +95,13 @@ def manhattan_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> int:
 def euclidean_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float:
     x1, y1 = point1
     x2, y2 = point2
-    return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+    return round(math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2))
+
+def enemy_heuristic(state, enemy_position):
+    # to adapt
+    distance_to_enemy = manhattan_distance(state, enemy_position)
+    return - distance_to_enemy
+
 
 """
 def heuristic(state, goal_state, moving_obstacle_position):
@@ -115,6 +135,7 @@ def create_basic_graph(problem, agent_pos):
                                             else 'red' if state in find_cells_coord(problem.grid, ord('}'))
                                             else 'gray' if state in find_cells_coord(problem.grid, ord('.')) and terrain_color==6 # ice coordinates 
                                             else 'orange' if state in find_cells_coord(problem.grid, ord('d'))
+                                            else 'blue' if state in find_cells_coord(problem.grid, ord('a'))
                                             else 'lightblue')
 
     return G
@@ -123,6 +144,13 @@ def highlight_explored_nodes(G, explored_nodes):
     if G is not None:
         for node, data in G.nodes(data=True):
             G.nodes[node]['color'] = 'green' if node in explored_nodes else data['color']
+
+    return G
+
+def highlight_explored_nodes_by_enemy(G, explored_nodes):
+    if G is not None:
+        for node, data in G.nodes(data=True):
+            G.nodes[node]['color'] = 'blue' if node in explored_nodes else data['color']
 
     return G
 

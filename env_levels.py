@@ -110,7 +110,7 @@ MAP
 ENDMAP
 STAIR:(13, 13),down
 BRANCH: (1,1,1,1),(2,2,2,2)
-MONSTER: ('H', "giant"), random, hostile
+MONSTER: ('a', "giant beetle"), random, hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
