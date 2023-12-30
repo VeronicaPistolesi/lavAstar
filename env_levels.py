@@ -114,3 +114,31 @@ MONSTER: ('a', "giant beetle"), random, hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
+# LEVEL 5
+des_file_static_lv5 = """
+MAZE: "mylevel", ' '
+FLAGS: premapped
+GEOMETRY:left,top
+MAP
+|||||||||||||||         
+|.I.L...L.L...|
+|I....L.....L.|
+|L..LIL.......|
+|.L.......L.IL|
+|...LL..L.....|
+|IIL.....II.L.|
+|..L.L.I.LL...|
+|.L..L..LL.L.I|
+|..L.II.....L.|
+|L..L...L.IIL.|
+|I...LI.....L.|
+|.L..III..L..L|
+|.....LL...L..|
+|||||||||||||||
+ENDMAP
+STAIR:(13, 13),down
+BRANCH: (1,1,1,1),(2,2,2,2)
+OBJECT: ('(',"skeleton key"), (11, 3), blessed, 0, name:"The Master Key of Thievery"
+MONSTER: (':', "crocodile"), random, hostile
+REGION: (0,0,20,80), lit, "ordinary"
+"""

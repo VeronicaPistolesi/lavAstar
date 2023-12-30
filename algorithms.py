@@ -134,147 +134,10 @@ def greedy_best_first_search(problem, heuristic):
 
 # -------------------------------------------------------------------------------------------
 
-# PROVA FUNZIONANTE MA DA CORREGGERE
-
-import heapq
-
-def lrta_star_search(problem, heuristic):
-    frontier = []  # Utilizziamo una lista come coda con priorità
-    start_node = Node(problem.initial_state, None, 0, heuristic(problem.initial_state, problem.goal_state))
-    heapq.heappush(frontier, (start_node.heuristic, start_node))
-    node_distances = {}
-    node_solutions = {}
-    enemy_positions = []
-
-    while frontier:
-        current_node = heapq.heappop(frontier)[1]  # Estrai il nodo con priorità più bassa
-        current_state = current_node.state
-        h_n = current_node.heuristic
-        
-        enemy_position = find_state_coord(problem.grid, ord('a'))
-        enemy_positions.append(enemy_position)
-
-        if problem.goal_test(current_state):
-            path = current_node.path()
-            return path, node_solutions, node_distances, enemy_positions
-
-        node_distances[current_state] = {'g(n)': current_node.path_cost, 'h(n)': h_n}
-        node_solutions[current_state] = current_node.path()
-
-        for next_state in problem.valid_next(current_state):
-            g_n = current_node.path_cost + problem.step_cost(next_state)
-            heuristic_value = heuristic(next_state, problem.goal_state)
-            #enemy_position = find_state_coord(problem.grid, ord('H'))
-            enemy_heuristic_value = enemy_heuristic(next_state, enemy_position)
-            total_heuristic_value = heuristic_value + enemy_heuristic_value
-
-            # Dentro il loop for i vicini:
-            if next_state in node_distances:
-                if g_n + total_heuristic_value < node_distances[next_state]['g(n)'] + node_distances[next_state]['h(n)']:
-                    # Creare una nuova lista temporanea senza l'elemento da rimuovere
-                    new_frontier = [(priority, node) for priority, node in frontier if node.state != next_state]
-                    # Aggiungere il nuovo nodo alla nuova lista
-                    next_node = Node(next_state, current_node, g_n, total_heuristic_value)
-                    heapq.heappush(new_frontier, (total_heuristic_value, next_node))
-                    # Sostituire la vecchia frontier con la nuova new_frontier
-                    frontier = new_frontier
-            else:
-                next_node = Node(next_state, current_node, g_n, total_heuristic_value)
-                heapq.heappush(frontier, (total_heuristic_value, next_node))
-
-    print(enemy_positions)
-
-    return None
-
-
-
-# ALTRA PROVA
-
-# def lrta_star_search(problem, heuristic):
-#     current_state = problem.initial_state
-#     current_node = Node(current_state, None, 0, heuristic(current_state, problem.goal_state))
-#     node_distances = {current_state: {'g(n)': 0, 'h(n)': current_node.heuristic}}
-#     enemy_positions = []
-
-#     while not problem.goal_test(current_state):
-#         enemy_position = find_state_coord(problem.grid, ord('H'))
-#         enemy_positions.append(enemy_position)
-
-#         best_action = None
-#         best_value = float('inf')
-
-#         for next_state in problem.valid_next(current_state):
-#             g_n = node_distances[current_state]['g(n)'] + problem.step_cost(next_state)
-#             heuristic_value = heuristic(next_state, problem.goal_state)
-#             enemy_heuristic_value = enemy_heuristic(next_state, enemy_position)
-#             total_heuristic_value = heuristic_value + enemy_heuristic_value
-
-#             if total_heuristic_value < best_value:
-#                 best_value = total_heuristic_value
-#                 best_action = next_state
-
-#         node_distances[best_action] = {'g(n)': g_n, 'h(n)': heuristic(best_action, problem.goal_state)}
-#         current_state = best_action
-
-#     path = node_distances[current_state]['g(n)']
-#     #return path, node_distances, enemy_positions
-#     return None
-
-
-
-
-
-# import heapq
-
-# def lrta_star_search(problem, heuristic):
-#     frontier = []  # Utilizziamo una lista come coda con priorità
-#     start_node = Node(problem.initial_state, None, 0, heuristic(problem.initial_state, problem.goal_state))
-#     heapq.heappush(frontier, (start_node.heuristic, start_node))
-#     node_distances = {}
-#     node_solutions = {}
-
-#     while frontier:
-#         current_node = heapq.heappop(frontier)[1]  # Estrai il nodo con priorità più bassa
-#         current_state = current_node.state
-#         h_n = current_node.heuristic
-
-#         # Aggiorna la posizione del nemico se è cambiata
-#         enemy_position = find_state_coord(problem.grid, ord('H'))
-
-#         if problem.goal_test(current_state):
-#             path = current_node.path()
-#             return path, node_solutions, node_distances
-
-#         node_distances[current_state] = {'g(n)': current_node.path_cost, 'h(n)': h_n, 'enemy_pos': enemy_position}
-#         node_solutions[current_state] = current_node.path()
-
-#         for next_state in problem.valid_next(current_state):
-#             g_n = current_node.path_cost + problem.step_cost(next_state)
-#             heuristic_value = heuristic(next_state, problem.goal_state)
-#             enemy_heuristic_value = enemy_heuristic(next_state, enemy_position)
-#             total_heuristic_value = heuristic_value + enemy_heuristic_value
-
-#             # Dentro il loop for i vicini:
-#             if next_state in node_distances:
-#                 if g_n + total_heuristic_value < node_distances[next_state]['g(n)'] + node_distances[next_state]['h(n)']:
-#                     # Creare una nuova lista temporanea senza l'elemento da rimuovere
-#                     new_frontier = [(priority, node) for priority, node in frontier if node.state != next_state]
-#                     # Aggiungere il nuovo nodo alla nuova lista
-#                     next_node = Node(next_state, current_node, g_n, total_heuristic_value)
-#                     heapq.heappush(new_frontier, (total_heuristic_value, next_node))
-#                     # Sostituire la vecchia frontier con la nuova new_frontier
-#                     frontier = new_frontier
-#             else:
-#                 next_node = Node(next_state, current_node, g_n, total_heuristic_value)
-#                 heapq.heappush(frontier, (total_heuristic_value, next_node))
-
-#     return None
-
-
 def onlineAStar(problem, current_state):
     H = {}
     if problem.goal_test(current_state):
-        print("Reached")
+        return
     else:
         valid_actions = problem.actions(current_state)
 
@@ -282,25 +145,35 @@ def onlineAStar(problem, current_state):
             next_state = problem.result(current_state, action)
             cost_so_far = problem.step_cost(next_state)
             heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+
+            #monster = find_state_coord(problem.grid, ord('a'))
+            #heuristic_cost = heuristic_dyn(next_state, problem.goal_state, monster) # TRIAL
+
             total_cost = cost_so_far + heuristic_cost
             H[action] = total_cost
 
         best_action = min(H, key=H.get) # Finds most efficient action
         next_state = problem.result(current_state, best_action) # Calculates next state
 
-        #print(f"Selected action: {best_action}, Total cost: {H[best_action]}")
+        print(f"Selected action: {best_action}, Total cost: {H[best_action]}")
         return best_action, next_state
     
+# -------------------------------------------------------------------------------------------
+
 def onlineGreedy(problem, current_state):
     H = {}
     if problem.goal_test(current_state):
-        print("Reached")
+        return
     else:
         valid_actions = problem.actions(current_state)
 
         for action in valid_actions:
             next_state = problem.result(current_state, action)
-            heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+            #heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+
+            monster = find_state_coord(problem.grid, ord('a'))
+            heuristic_cost = heuristic_dyn(next_state, problem.goal_state, monster)
+
             total_cost = heuristic_cost
             H[action] = total_cost
 

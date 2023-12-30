@@ -83,10 +83,8 @@ def cost_computation(grid, grid_colors, solution_path):
             cost += 1
     return cost
 
-
 # -----------------------------------------------------------------------------------------------
 
-# Heuristic function: Manhatten Distance
 def manhattan_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> int: 
     x1, y1 = point1     
     x2, y2 = point2
@@ -97,23 +95,27 @@ def euclidean_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> floa
     x2, y2 = point2
     return round(math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2))
 
+"""
 def enemy_heuristic(state, enemy_position):
     # to adapt
     distance_to_enemy = manhattan_distance(state, enemy_position)
     return - distance_to_enemy
-
-
 """
-def heuristic(state, goal_state, moving_obstacle_position):
-    # Calculate the Manhattan distance between the current state and the goal state
-    h = manhattan_distance(state, goal_state)
 
-    # Penalize the heuristic if the agent's position overlaps with the moving obstacle
-    if state == moving_obstacle_position:
-        h += 100  # Adjust the penalty value as needed
-
-    return h
-"""
+#I tried to write a new heuristic that takes into account the monster position and assigns to it a different weight depending on how far away it is from the agent.
+#The agent is likely to get stuck in a plateu, so we need to adjust this: we could consider assigning different weights to step_cost or introducing some randomity
+def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], monster_influence_factor=3, distance_threshold=3) -> float:
+    distance_to_goal = euclidean_distance(state, goal_position)
+    distance_to_monster = euclidean_distance(state, monster_position)
+    
+    if distance_to_monster >= distance_threshold:
+        heuristic_influence = 0.1 * distance_to_monster
+    else:
+        heuristic_influence = monster_influence_factor * distance_to_monster
+    
+    total_heuristic = distance_to_goal + heuristic_influence
+    
+    return round(total_heuristic)
 
 # -----------------------------------------------------------------------------------------------
 
@@ -199,32 +201,3 @@ def plot_graph_distances(G, distances_dict):
         plt.show()
 
 # -----------------------------------------------------------------------------------------------
-
-"""
-def modify_env(original_matrix):
-    value_mapping = {
-    (2, 5, 0): 124, # wall
-    (1, 0, 0): 46, # floor
-    (10, 0, 0): 64, # agent
-    (6, 2, 0): 68, # monster/ball 
-    (8, 1, 0): 62, # stairs
-    (9, 0, 0): 125 # lava
-}
-    
-    # new 2D matrix with the mapped values
-    mapped_matrix = np.zeros((original_matrix.shape[0], original_matrix.shape[1]))
-
-    for i in range(original_matrix.shape[0]):
-        for j in range(original_matrix.shape[1]):
-            # Get the tuple representing the row in the original matrix
-            row_tuple = tuple(original_matrix[i, j, :])
-
-            # Map the value using the value_mapping dictionary
-            mapped_value = value_mapping.get(row_tuple, 0)
-
-            # Assign the mapped value to the corresponding position in the new matrix
-            mapped_matrix[i, j] = mapped_value
-
-    # Resulting 2D matrix
-    return mapped_matrix
-"""
