@@ -13,7 +13,7 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
     
     def valid_next(self, state): #Returns a list of all valid next states
         x, y = state
-        possible_next_states = [(x, y-1), (x-1, y), (x, y+1), (x+1, y), (x-1, y-1), (x-1, y+1), (x+1, y+1), (x+1, y-1)] #N E S W NE SE SW NW
+        possible_next_states = [(x, y-1), (x+1, y), (x, y+1), (x-1, y), (x+1, y-1), (x+1, y+1), (x-1, y+1), (x-1, y-1)] #N E S W NE SE SW NW
         return [next for next in possible_next_states if self.is_valid(next)]
     
     def actions(self, state): # Returns a list of valid actions that can be executed in the given state
@@ -21,13 +21,13 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         valid_next = self.valid_next(state)
         action_map = {
             (x, y-1): 0, #N
-            (x-1, y): 1, #E
+            (x+1, y): 1, #E
             (x, y+1): 2, #S
-            (x+1, y): 3, #W
-            (x-1, y-1): 4, # NE
-            (x-1, y+1): 5, # SE
-            (x+1, y+1): 6, # SW
-            (x+1, y-1): 7 # NW
+            (x-1, y): 3, #W
+            (x+1, y-1): 4, # NE
+            (x+1, y+1): 5, # SE
+            (x-1, y+1): 6, # SW
+            (x-1, y-1): 7 # NW
         }
         #possible_next_states = [(x+1, y), (x-1, y), (x, y+1), (x, y-1)] #E W S N
         #valid_next = [next for next in possible_next_states if self.is_valid(next)]
@@ -38,13 +38,13 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         x, y = state
         action_map = {
             0: (x, y-1),  # N
-            1: (x-1, y),  # E
+            1: (x+1, y),  # E
             2: (x, y+1),  # S
-            3: (x+1, y),   # W
-            4: (x-1, y-1), # NE
-            5: (x-1, y+1), # SE
-            6: (x+1, y+1), # SW
-            7: (x+1, y-1) # NW
+            3: (x-1, y),   # W
+            4: (x+1, y-1), # NE
+            5: (x+1, y+1), # SE
+            6: (x-1, y+1), # SW
+            7: (x-1, y-1) # NW
         }
 
         next = action_map.get(action, state)
@@ -65,7 +65,7 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
 
         if terrain_type == ord('.') and terrain_color == 6:  #Ice cell
             return 3
-        if terrain_type == ord('.') and terrain_color == 7:  #normal cell
+        if (terrain_type == ord('.') and terrain_color == 7) or terrain_type == ord('>'):  #normal cell
             return 1
         else:
             return float('inf')  #Default cost for other terrain types
@@ -73,7 +73,6 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
     def update_grid(self, new_grid): #Reassigns grid (dynamic)
         self.grid = new_grid
      
-
 
 #----------------------------------------------------------------------------
 class Node: #We consider the grid as a graph for our search problem
@@ -99,13 +98,7 @@ class SimpleSearchAgent:
         self.problem = problem
         self.state = problem.initial_state
         self.seq = []
-    
-    def execute_action(self): # Returns and removes the next action from the sequence
-        if self.seq:
-            return self.seq.pop(0)
-        else:
-            return None
-    
+
     def execution_time(self):
         return round(self._execution_time, 6)
         
@@ -129,12 +122,25 @@ class InformedSearchAgent(SimpleSearchAgent):
         self._execution_time = time.time() - start_time
         return self.seq, node_solutions, node_distances
     
+    """
     def search2(self, search_algorithm, heuristic):   # PROVA
         start_time = time.time()
         self.seq, node_solutions, node_distances, enemy_positions = search_algorithm(self.problem, heuristic) 
         self._execution_time = time.time() - start_time
         return self.seq, node_solutions, node_distances, enemy_positions
+    """
     
+class OnlineSearchAgent(SimpleSearchAgent):
+    def __init__(self, problem):
+        super().__init__(problem)
+    
+    def online_search(self, onsearch_algorithm, current_state):
+        #start_time = time.time()
+        action, next_state = onsearch_algorithm(self.problem, current_state)
+        self.seq.append(next_state)
+
+        #self._execution_time = time.time() - start_time
+        return action
 
 #------------------------------------------------------------------------------------------
 
@@ -156,7 +162,7 @@ class LRTAStarAgent:
             return self.a
         else:
             if s1 not in self.H: # if s1 isn't in H add it
-                self.H[s1] = manhattan_distance(s1, self.problem.goal_state) # Add to dictionary
+                self.H[s1] = euclidean_distance(s1, self.problem.goal_state) # Add to dictionary
                 
             if self.s is not None: # if s1 has previous state s that it comes from
                 for action in self.problem.actions(self.s): # For each action in the set of valid actions in the state self.s
@@ -177,11 +183,11 @@ class LRTAStarAgent:
         
     def LRTA_cost(self, s, a, s1, H): #Returns cost to move from state 's' to state 's1' plus estimated cost to get to goal from s1
         if s1 is None:
-            return manhattan_distance(s, self.problem.goal_state)
+            return euclidean_distance(s, self.problem.goal_state)
         else:
             # sometimes we need to get H[s1] which we haven't yet added to H
             # to replace this try, except: we can initialize H with values from problem.h
             try:
                 return 1 + self.H[s1]
             except:
-                return 1 + manhattan_distance(s1, self.problem.goal_state)
+                return 1 + euclidean_distance(s1, self.problem.goal_state)

@@ -269,3 +269,43 @@ def lrta_star_search(problem, heuristic):
 #                 heapq.heappush(frontier, (total_heuristic_value, next_node))
 
 #     return None
+
+
+def onlineAStar(problem, current_state):
+    H = {}
+    if problem.goal_test(current_state):
+        print("Reached")
+    else:
+        valid_actions = problem.actions(current_state)
+
+        for action in valid_actions:
+            next_state = problem.result(current_state, action)
+            cost_so_far = problem.step_cost(next_state)
+            heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+            total_cost = cost_so_far + heuristic_cost
+            H[action] = total_cost
+
+        best_action = min(H, key=H.get) # Finds most efficient action
+        next_state = problem.result(current_state, best_action) # Calculates next state
+
+        #print(f"Selected action: {best_action}, Total cost: {H[best_action]}")
+        return best_action, next_state
+    
+def onlineGreedy(problem, current_state):
+    H = {}
+    if problem.goal_test(current_state):
+        print("Reached")
+    else:
+        valid_actions = problem.actions(current_state)
+
+        for action in valid_actions:
+            next_state = problem.result(current_state, action)
+            heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+            total_cost = heuristic_cost
+            H[action] = total_cost
+
+        best_action = min(H, key=H.get) # Finds most efficient action
+        next_state = problem.result(current_state, best_action) # Calculates next state
+
+        #print(f"Selected action: {best_action}, Total cost: {H[best_action]}")
+        return best_action, next_state
