@@ -156,7 +156,8 @@ def highlight_explored_nodes_by_enemy(G, explored_nodes):
 
     return G
 
-def plot_graph(G):
+def plot_graph(G, save_path):
+    plt.ioff()  # Turn off interactive mode
     if G is not None:
         pos = {node: (node[0], -node[1]) for node in G.nodes()}
         labels = {node: node for node in G.nodes()}
@@ -170,9 +171,11 @@ def plot_graph(G):
 
         plt.title('Two-Dimensional State Space Graph with state coordinates')
         plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
-        plt.show()
+        #plt.show()
+        plt.savefig(save_path)  # Save the plot as an image file
 
-def plot_graph_distances(G, distances_dict):
+def plot_graph_distances(G, distances_dict, save_path):
+    plt.ioff()  # Turn off interactive mode
     if G is not None:
         pos = {node: (node[0], -node[1]) for node in G.nodes()}
         
@@ -198,6 +201,27 @@ def plot_graph_distances(G, distances_dict):
 
         plt.title('Two-Dimensional State Space Graph with node distances')
         plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
-        plt.show()
+        #plt.show()
+        plt.savefig(save_path)  # Save the plot as an image file
+
+import matplotlib.image as mpimg
+
+def display_saved_plots(plot_paths):
+    plt.ioff()  # Turn off interactive mode
+    
+    num_plots = len(plot_paths)
+
+    fig, axes = plt.subplots(1, num_plots, figsize=(30, 10))
+
+    for i, (plot_path, ax) in enumerate(zip(plot_paths, axes), 1):
+        img = mpimg.imread(plot_path)
+        ax.imshow(img)
+        ax.set_title(f'{plot_path}')
+        ax.axis('off')
+
+    # Manually adjust horizontal spacing
+    plt.subplots_adjust(wspace=0.1)
+
+    plt.show()
 
 # -----------------------------------------------------------------------------------------------
