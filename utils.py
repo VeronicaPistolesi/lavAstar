@@ -93,7 +93,7 @@ def manhattan_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> int:
 def euclidean_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float:
     x1, y1 = point1
     x2, y2 = point2
-    return round(math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2))
+    return round(math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2), 3) # do not round to integer!
 
 """
 def enemy_heuristic(state, enemy_position):
@@ -104,18 +104,18 @@ def enemy_heuristic(state, enemy_position):
 
 #I tried to write a new heuristic that takes into account the monster position and assigns to it a different weight depending on how far away it is from the agent.
 #The agent is likely to get stuck in a plateu, so we need to adjust this: we could consider assigning different weights to step_cost or introducing some randomity
-def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], monster_influence_factor=3, distance_threshold=3) -> float:
+def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], monster_influence_factor=3, distance_threshold=3) -> float: #5 x rat, 2 x beetle
     distance_to_goal = euclidean_distance(state, goal_position)
     distance_to_monster = euclidean_distance(state, monster_position)
     
-    if distance_to_monster >= distance_threshold:
-        heuristic_influence = 0.1 * distance_to_monster
+    if distance_to_monster < distance_threshold:
+        total_heuristic = 2 * distance_to_goal - distance_to_monster
     else:
-        heuristic_influence = monster_influence_factor * distance_to_monster
+        total_heuristic = distance_to_goal
+
+    print(state, distance_to_goal, distance_to_monster, total_heuristic)
     
-    total_heuristic = distance_to_goal + heuristic_influence
-    
-    return round(total_heuristic)
+    return round(total_heuristic, 3) # do not round to integer!
 
 # -----------------------------------------------------------------------------------------------
 

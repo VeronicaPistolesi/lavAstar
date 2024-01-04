@@ -134,32 +134,6 @@ def greedy_best_first_search(problem, heuristic):
 
 # -------------------------------------------------------------------------------------------
 
-def onlineAStar(problem, current_state):
-    H = {}
-    if problem.goal_test(current_state):
-        return
-    else:
-        valid_actions = problem.actions(current_state)
-
-        for action in valid_actions:
-            next_state = problem.result(current_state, action)
-            cost_so_far = problem.step_cost(next_state)
-            heuristic_cost = euclidean_distance(next_state, problem.goal_state)
-
-            #monster = find_state_coord(problem.grid, ord('a'))
-            #heuristic_cost = heuristic_dyn(next_state, problem.goal_state, monster) # TRIAL
-
-            total_cost = cost_so_far + heuristic_cost
-            H[action] = total_cost
-
-        best_action = min(H, key=H.get) # Finds most efficient action
-        next_state = problem.result(current_state, best_action) # Calculates next state
-
-        print(f"Selected action: {best_action}, Total cost: {H[best_action]}")
-        return best_action, next_state
-    
-# -------------------------------------------------------------------------------------------
-
 def onlineGreedy(problem, current_state):
     H = {}
     if problem.goal_test(current_state):
@@ -182,3 +156,103 @@ def onlineGreedy(problem, current_state):
 
         #print(f"Selected action: {best_action}, Total cost: {H[best_action]}")
         return best_action, next_state
+    
+# -------------------------------------------------------------------------------------------
+
+def onlineAStar(problem, seq, current_state):
+
+    if is_dead_end(problem, current_state, seq):
+        print("dead")
+        valid_actions = problem.actions(current_state)
+        best_action, next_state = backtrack(problem, current_state, valid_actions, seq)
+        return best_action, next_state
+
+    if current_state in seq: # Prefers unseen states
+        print('già visto', current_state)
+        valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # Removes actions that lead to already visited states
+        best_action, next_state = select_best_action(problem, current_state, valid_actions)
+        return best_action, next_state
+        
+    else:
+        print('nuovo', current_state)
+        valid_actions = problem.actions(current_state)
+        best_action, next_state = select_best_action(problem, current_state, valid_actions)
+        return best_action, next_state
+        
+
+def select_best_action(problem, current_state, valid_actions):
+    H_local = {}
+    for action in valid_actions:
+            next_state = problem.result(current_state, action)
+            cost_so_far = problem.step_cost(next_state)
+
+            monster = find_state_coord(problem.grid, ord('r'))
+            heuristic_cost = heuristic_dyn(next_state, problem.goal_state, monster) # TRIAL
+
+            #heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+
+            total_cost = cost_so_far + heuristic_cost
+            H_local[action] = total_cost
+
+    best_action = min(H_local, key=H_local.get) # Finds most efficient action
+    next_state = problem.result(current_state, best_action) # Calculates next state
+    print(f"Selected action: {best_action}, Total cost: {H_local[best_action]}")
+    return best_action, next_state
+
+def backtrack(problem, current_state, valid_actions, seq):
+    H_local = {}
+    for action in valid_actions:
+            next_state = problem.result(current_state, action)
+    
+            H_local[action] = seq.index(next_state)
+
+    best_action = min(H_local, key=H_local.get) # Finds action that leads to state furtherst from the dead end
+    next_state = problem.result(current_state, best_action) # Calculates next state
+    print(f"Selected action: {best_action}, Total cost: {H_local[best_action]}")
+    return best_action, next_state
+
+def is_dead_end(problem, current_state, seq):
+    valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # Removes actions that lead to already visited states
+    return not valid_actions # Returns True if valid_actions is empty
+
+# -------------------------------------------------------------------------------------------
+
+def onlineGreedy(problem, seq, current_state):
+
+    if is_dead_end(problem, current_state, seq):
+        print("dead")
+        valid_actions = problem.actions(current_state)
+        best_action, next_state = backtrack(problem, current_state, valid_actions, seq)
+        return best_action, next_state
+
+    if current_state in seq: # Prefers unseen states
+        print('già visto', current_state)
+        valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # Removes actions that lead to already visited states
+        best_action, next_state = select_best_action2(problem, current_state, valid_actions, seq)
+        return best_action, next_state
+        
+    else:
+        print('nuovo', current_state)
+        valid_actions = problem.actions(current_state)
+        best_action, next_state = select_best_action2(problem, current_state, valid_actions, seq)
+        return best_action, next_state
+        
+
+def select_best_action2(problem, current_state, valid_actions, seq):
+    H_local = {}
+    for action in valid_actions:
+            next_state = problem.result(current_state, action)
+            #cost_so_far = problem.step_cost(next_state)
+
+            monster = find_state_coord(problem.grid, ord('r'))
+            heuristic_cost = heuristic_dyn(next_state, problem.goal_state, monster) # TRIAL
+
+            #heuristic_cost = euclidean_distance(next_state, problem.goal_state)
+
+            total_cost = heuristic_cost
+            H_local[action] = total_cost
+
+    best_action = min(H_local, key=H_local.get) # Finds most efficient action
+    next_state = problem.result(current_state, best_action) # Calculates next state
+    print(f"Selected action: {best_action}, Total cost: {H_local[best_action]}")
+    return best_action, next_state

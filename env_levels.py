@@ -86,7 +86,7 @@ REGION: (0,0,20,80), lit, "ordinary"
 #-------------------------------------------
 # Dynamic (monster)
 
-# LEVEL 4
+# LEVEL 4 #rat - difficult
 des_file_static_lv4 = """
 MAZE: "mylevel", ' '
 FLAGS: premapped
@@ -103,6 +103,62 @@ MAP
 |.L..L..LL.L.I|
 |..L.II.....L.|
 |L..L...L.IIL.|
+|I...LI.....L.|
+|.L..III..L..L|
+|.....LL...L..|
+|||||||||||||||
+ENDMAP
+STAIR:(13, 13),down
+BRANCH: (1,1,1,1),(2,2,2,2)
+MONSTER: ('r', "sewer rat"), random, hostile
+REGION: (0,0,20,80), lit, "ordinary"
+"""
+
+# LEVEL 4.1 #rat w/ dead_end - difficult
+des_file_static_lv4_1 = """
+MAZE: "mylevel", ' '
+FLAGS: premapped
+GEOMETRY:left,top
+MAP
+|||||||||||||||         
+|.I.L...L.L...|
+|I....L.....L.|
+|L..LIL.......|
+|.L.......L.IL|
+|...LL..L.IL..|
+|IIL.....IL.L.|
+|..L.L.I.LL.L.|
+|.L..L..LL.LLI|
+|..L.II.....L.|
+|L..L...LLLLL.|
+|I...LI.....L.|
+|.L..III..L..L|
+|.....LL...L..|
+|||||||||||||||
+ENDMAP
+STAIR:(13, 13),down
+BRANCH: (1,1,1,1),(2,2,2,2)
+MONSTER: ('r', "sewer rat"), (6,6), hostile
+REGION: (0,0,20,80), lit, "ordinary"
+"""
+
+# LEVEL 4.1 #beetle - easier #COPYY
+des_file_static_lv4_11 = """
+MAZE: "mylevel", ' '
+FLAGS: premapped
+GEOMETRY:left,top
+MAP
+|||||||||||||||         
+|.I.L...L.L...|
+|I....L.....L.|
+|L..LIL.......|
+|.L.......L.IL|
+|...LL..L.....|
+|IIL.....II.L.|
+|..L.L.I.LL...|
+|.L..L..LL.L.I|
+|..L.II.....L.|
+|L..L...LLIIL.|
 |I...LI.....L.|
 |.L..III..L..L|
 |.....LL...L..|

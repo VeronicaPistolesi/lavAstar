@@ -9,7 +9,7 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         self.height = len(grid) # columns
         self.initial_state = initial_state
         self.goal_state = goal_state
-        self.obstacles = {ord('-'), ord('|'), ord('}'), ord('a')}
+        self.obstacles = {ord('-'), ord('|'), ord('}'), ord('r')}
     
     def valid_next(self, state): #Returns a list of all valid next states
         x, y = state
@@ -130,8 +130,9 @@ class OnlineSearchAgent(SimpleSearchAgent):
     
     def online_search(self, onsearch_algorithm, current_state):
         #start_time = time.time()
-        action, next_state = onsearch_algorithm(self.problem, current_state)
-        self.seq.append(next_state)
+
+        action, next_state = onsearch_algorithm(self.problem, self.seq, current_state)
+        self.seq.append(current_state)
 
         #self._execution_time = time.time() - start_time
-        return action
+        return action, next_state
