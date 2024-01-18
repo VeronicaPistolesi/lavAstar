@@ -86,8 +86,8 @@ REGION: (0,0,20,80), lit, "ordinary"
 #-------------------------------------------
 # Dynamic (monster)
 
-# LEVEL 4 #rat - difficult
-des_file_static_lv4 = """
+# LEVEL 4_1  no dead end - rat
+des_file_static_lv4_1 = """
 MAZE: "mylevel", ' '
 FLAGS: premapped
 GEOMETRY:left,top
@@ -110,12 +110,40 @@ MAP
 ENDMAP
 STAIR:(13, 13),down
 BRANCH: (1,1,1,1),(2,2,2,2)
-MONSTER: ('r', "sewer rat"), random, hostile
+MONSTER: ('r', "sewer rat"), (6,6), hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
-# LEVEL 4.1 #rat w/ dead_end - difficult
-des_file_static_lv4_1 = """
+# LEVEL 4_2  no dead end - beetle
+des_file_static_lv4_2 = """
+MAZE: "mylevel", ' '
+FLAGS: premapped
+GEOMETRY:left,top
+MAP
+|||||||||||||||         
+|.I.L...L.L...|
+|I....L.....L.|
+|L..LIL.......|
+|.L.......L.IL|
+|...LL..L.....|
+|IIL.....II.L.|
+|..L.L.I.LL...|
+|.L..L..LL.L.I|
+|..L.II.....L.|
+|L..L...L.IIL.|
+|I...LI.....L.|
+|.L..III..L..L|
+|.....LL...L..|
+|||||||||||||||
+ENDMAP
+STAIR:(13, 13),down
+BRANCH: (1,1,1,1),(2,2,2,2)
+MONSTER: ('a', "giant beetle"), (6,6), hostile
+REGION: (0,0,20,80), lit, "ordinary"
+"""
+
+# LEVEL 5.1 # rat w/ dead_end - difficult
+des_file_static_lv5_1 = """
 MAZE: "mylevel", ' '
 FLAGS: premapped
 GEOMETRY:left,top
@@ -142,8 +170,8 @@ MONSTER: ('r', "sewer rat"), (6,6), hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
-# LEVEL 4.1 #beetle - easier #COPYY
-des_file_static_lv4_11 = """
+# LEVEL 5.2 # beetle w/ dead_end - difficult
+des_file_static_lv5_2 = """
 MAZE: "mylevel", ' '
 FLAGS: premapped
 GEOMETRY:left,top
@@ -153,12 +181,12 @@ MAP
 |I....L.....L.|
 |L..LIL.......|
 |.L.......L.IL|
-|...LL..L.....|
-|IIL.....II.L.|
-|..L.L.I.LL...|
-|.L..L..LL.L.I|
+|...LL..L.IL..|
+|IIL.....IL.L.|
+|..L.L.I.LL.L.|
+|.L..L..LL.LLI|
 |..L.II.....L.|
-|L..L...LLIIL.|
+|L..L...LLLLL.|
 |I...LI.....L.|
 |.L..III..L..L|
 |.....LL...L..|
@@ -166,35 +194,6 @@ MAP
 ENDMAP
 STAIR:(13, 13),down
 BRANCH: (1,1,1,1),(2,2,2,2)
-MONSTER: ('a', "giant beetle"), random, hostile
-REGION: (0,0,20,80), lit, "ordinary"
-"""
-
-# LEVEL 5
-des_file_static_lv5 = """
-MAZE: "mylevel", ' '
-FLAGS: premapped
-GEOMETRY:left,top
-MAP
-|||||||||||||||         
-|.I.L...L.L...|
-|I....L.....L.|
-|L..LIL.......|
-|.L.......L.IL|
-|...LL..L.....|
-|IIL.....II.L.|
-|..L.L.I.LL...|
-|.L..L..LL.L.I|
-|..L.II.....L.|
-|L..L...L.IIL.|
-|I...LI.....L.|
-|.L..III..L..L|
-|.....LL...L..|
-|||||||||||||||
-ENDMAP
-STAIR:(13, 13),down
-BRANCH: (1,1,1,1),(2,2,2,2)
-OBJECT: ('(',"skeleton key"), (11, 3), blessed, 0, name:"The Master Key of Thievery"
-MONSTER: (':', "crocodile"), random, hostile
+MONSTER: ('a', "giant beetle"), (6,6), hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """

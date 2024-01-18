@@ -128,10 +128,10 @@ class OnlineSearchAgent(SimpleSearchAgent):
     def __init__(self, problem):
         super().__init__(problem)
     
-    def online_search(self, onsearch_algorithm, current_state):
+    def online_search(self, onsearch_algorithm, current_state, m, mode, he_type):
         #start_time = time.time()
 
-        action, next_state = onsearch_algorithm(self.problem, self.seq, current_state)
+        action, next_state = onsearch_algorithm(self.problem, self.seq, current_state, m, mode, he_type)
         self.seq.append(current_state)
 
         #self._execution_time = time.time() - start_time
