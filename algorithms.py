@@ -33,23 +33,23 @@ def uniform_cost_search(problem): #dijkstra
     start_node = Node(problem.initial_state, None, 0)
     frontier.put(start_node)  # add initial state of the problem with cost 0, [] is the path taken so far (beginning it is empty)
     explored = set()
-    node_distances = {}  # Dictionary to store g(n) and heuristic values for each node
+    #node_distances = {}  # Dictionary to store g(n) and heuristic values for each node
 
     while not frontier.empty():     # explore path until frontier is empty (consider all possible paths)
         current_node = frontier.get()
         current_state = current_node.state
 
-        g_n = current_node.path_cost  # Save the g(n) value
+        #g_n = current_node.path_cost  # Save the g(n) value
 
         if problem.goal_test(current_state): # check if current state is goal, if yes: return path
             path = current_node.path() 
-            return path, node_distances
+            return path #, node_distances
 
         if current_state not in explored:
             #explore the neighbours of current state, calculate the cost of reaching each neighbour and add them to the frontier with updated cost 
             explored.add(current_state)
 
-            node_distances[current_state] = {'g(n)': g_n} # Save g(cost) for the current node in the dictionary
+            #node_distances[current_state] = {'g(n)': g_n} # Save g(cost) for the current node in the dictionary
             #print(node_distances, node_distances[current_state])
 
             for next in problem.valid_next(current_state):

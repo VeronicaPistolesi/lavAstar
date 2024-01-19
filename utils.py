@@ -3,6 +3,7 @@ from typing import List, Tuple
 import matplotlib.pyplot as plt
 import networkx as nx
 import math
+import matplotlib.image as mpimg
 
 # useful for offline search
 def actions_from_path(start: Tuple[int, int], path: List[Tuple[int, int]]) -> List[int]:
@@ -100,7 +101,6 @@ def diagonal_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float
                                                         # When D = 1 and D2 = sqrt(2), this is called the octile distance. (diagonal movements unpreferred)
 
 #I tried to write a new heuristic that takes into account the monster position and assigns to it a different weight depending on how far away it is from the agent.
-#The agent is likely to get stuck in a plateu, so we need to adjust this: we could consider assigning different weights to step_cost or introducing some randomity
 def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], distance_threshold=int, he_type=str) -> float: # 3 rat, 2 beetle   # monster_influence_factor=3
     
     if he_type == "euclidean":                                                                                                                                      # old 5 x rat, 2 x beetle
@@ -173,8 +173,8 @@ def plot_graph(G, save_path):
 
         plt.title('Two-Dimensional State Space Graph with state coordinates')
         plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
-        #plt.show()
         plt.savefig(save_path)  # Save the plot as an image file
+        plt.close()
 
 def plot_graph_distances(G, distances_dict, save_path):
     plt.ioff()  # Turn off interactive mode
@@ -203,10 +203,8 @@ def plot_graph_distances(G, distances_dict, save_path):
 
         plt.title('Two-Dimensional State Space Graph with node distances')
         plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
-        #plt.show()
         plt.savefig(save_path)  # Save the plot as an image file
-
-import matplotlib.image as mpimg
+        plt.close()
 
 def display_saved_plots(plot_paths):
     plt.ioff()  # Turn off interactive mode
@@ -225,5 +223,3 @@ def display_saved_plots(plot_paths):
     plt.subplots_adjust(wspace=0.1)
 
     plt.show()
-
-# -----------------------------------------------------------------------------------------------
