@@ -1,8 +1,12 @@
-import time
 from utils import *
 from classes import *
-import matplotlib.pyplot as plt
+from algorithms import *
+import time
 import pandas as pd
+import matplotlib.pyplot as plt
+import IPython.display as display
+
+
 
 algorithms = ['Breadth First Search (UA)', 'Uniform Cost Search (UA)', 'A* (IA)', 'Greedy Best First Search (IA)']
 
@@ -48,3 +52,57 @@ def generate_comparison_dataframe(level):
     df['Path Cost'] = path_cost_levels[level - 1]
     df.set_index('Algorithm', inplace=True)
     return df
+
+# -----------------------------------------------------------------------------------------------
+def case(obs_lv, env_lv, monster_type, alg, heur_type):
+    # Instantiate the game map
+    game_map_lv = process_matrix(obs_lv['chars'])
+    game_map_lv_colors = process_matrix(obs_lv['colors'])
+    game_lv = obs_lv['pixel']
+
+    # Instantiate a problem from class GridWorldProblem
+    grid_problem = GridWorldProblem(game_map_lv, find_state_coord(game_map_lv, ord('@')), find_state_coord(game_map_lv, ord('>')), game_map_lv_colors)
+
+    # Create the basic graph
+    basic_graph = create_basic_graph(grid_problem, grid_problem.initial_state)
+
+    #plot_graph(basic_graph)
+    onlineSearchAgent = OnlineSearchAgent(grid_problem)
+
+    # Plot the game map
+    image = plt.imshow(game_lv[25:300, :250])
+    
+    agent = find_state_coord(grid_problem.grid, ord('@'))
+
+    cost = 0
+
+    while agent!=None:
+        
+        print("Agent:", agent)
+
+        valid_actions = grid_problem.actions(agent)
+        print("Valid directions:", valid_actions)
+
+        action, next_state = onlineSearchAgent.online_search(onlineMode, agent, monster_type, alg, heur_type)
+
+        grid, _, _, _ = env_lv.step(action) # Agent takes next step
+        new_game_map_lv4_1 = process_matrix(grid['chars']) # Memorize and cuts out the new map
+        grid_problem.update_grid(new_game_map_lv4_1) # Update grid
+        agent = find_state_coord(grid_problem.grid, ord('@'))
+
+        display.display(plt.gcf())
+        display.clear_output(wait=True)
+        image.set_data(grid['pixel'][25:300, :250])
+        time.sleep(1.5)
+
+    if agent==None:
+        path = onlineSearchAgent.seq
+        if grid_problem.goal_test(next_state):
+            plt.close()
+            print('Goal reached!')
+            path = onlineSearchAgent.seq
+            path_cost = cost_computation(game_map_lv, game_map_lv_colors, path)
+            print(f"Path length: {len(path)}, Path cost: {path_cost}")
+        
+        else:
+            print("You loose")
