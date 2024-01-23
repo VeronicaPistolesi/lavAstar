@@ -24,9 +24,9 @@ def generate_grid_problem(observation):
 
 def perform_search(level, search_agent, search_algorithm, distance_function=None):
 
-    if distance_function: #Informed search
+    if distance_function: # Informed search
         solution_path, explored_nodes_paths, node_distances = search_agent.search(search_algorithm, distance_function)
-    else: #Uninformed search
+    else: # Uninformed search
         solution_path = search_agent.search(search_algorithm)
 
     record_results(level, search_agent, solution_path)
@@ -54,7 +54,7 @@ def generate_comparison_dataframe(level):
     return df
 
 # -----------------------------------------------------------------------------------------------
-def case(obs_lv, env_lv, monster_type, alg, heur_type):
+def perform_online_search(obs_lv, env_lv, monster_type, alg, heur_type):
     # Instantiate the game map
     game_map_lv = process_matrix(obs_lv['chars'])
     game_map_lv_colors = process_matrix(obs_lv['colors'])
@@ -63,10 +63,6 @@ def case(obs_lv, env_lv, monster_type, alg, heur_type):
     # Instantiate a problem from class GridWorldProblem
     grid_problem = GridWorldProblem(game_map_lv, find_state_coord(game_map_lv, ord('@')), find_state_coord(game_map_lv, ord('>')), game_map_lv_colors)
 
-    # Create the basic graph
-    basic_graph = create_basic_graph(grid_problem, grid_problem.initial_state)
-
-    #plot_graph(basic_graph)
     onlineSearchAgent = OnlineSearchAgent(grid_problem)
 
     # Plot the game map
@@ -74,14 +70,12 @@ def case(obs_lv, env_lv, monster_type, alg, heur_type):
     
     agent = find_state_coord(grid_problem.grid, ord('@'))
 
-    cost = 0
-
     while agent!=None:
         
         print("Agent:", agent)
 
         valid_actions = grid_problem.actions(agent)
-        print("Valid directions:", valid_actions)
+        #print("Valid directions:", valid_actions)
 
         action, next_state = onlineSearchAgent.online_search(onlineMode, agent, monster_type, alg, heur_type)
 

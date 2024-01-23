@@ -153,7 +153,7 @@ MAP
 |I....L.....L.|
 |L..LIL.......|
 |.L.......L.IL|
-|...LL..L.IL..|
+|...LL..L.ILL.|
 |IIL.....IL.L.|
 |..L.L.I.LL.L.|
 |.L..L..LL.LLI|
@@ -181,7 +181,7 @@ MAP
 |I....L.....L.|
 |L..LIL.......|
 |.L.......L.IL|
-|...LL..L.IL..|
+|...LL..L.ILL.|
 |IIL.....IL.L.|
 |..L.L.I.LL.L.|
 |.L..L..LL.LLI|

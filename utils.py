@@ -115,7 +115,7 @@ def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monste
     else:
         total_heuristic = distance_to_goal
 
-    print(state, distance_to_goal, distance_to_monster, total_heuristic)
+    #print(state, distance_to_goal, distance_to_monster, total_heuristic)
     
     return round(total_heuristic, 3) # do not round to integer!
 
