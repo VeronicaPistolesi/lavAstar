@@ -21,44 +21,37 @@ def breadth_first_search(problem):
             explored.add(current_state)
             
             for next in problem.valid_next(current_state): # iterate over possible next states from the current state
-                next_node = Node(next, current_node, 0) #path cost is zero
+                next_node = Node(next, current_node, 0) 
                 frontier.put(next_node) # enques the next state and the updated path to the frontier
                 
     return None
 
 # -------------------------------------------------------------------------------------------------
 
-def uniform_cost_search(problem): #dijkstra
+def uniform_cost_search(problem): 
     frontier = PriorityQueue() 
     start_node = Node(problem.initial_state, None, 0)
     frontier.put(start_node)  # add initial state of the problem with cost 0, [] is the path taken so far (beginning it is empty)
     explored = set()
-    #node_distances = {}  # Dictionary to store g(n) and heuristic values for each node
 
-    while not frontier.empty():     # explore path until frontier is empty (consider all possible paths)
+
+    while not frontier.empty(): # explore path until frontier is empty (consider all possible paths)
         current_node = frontier.get()
         current_state = current_node.state
 
-        #g_n = current_node.path_cost  # Save the g(n) value
-
         if problem.goal_test(current_state): # check if current state is goal, if yes: return path
             path = current_node.path() 
-            return path #, node_distances
+            return path 
 
         if current_state not in explored:
-            #explore the neighbours of current state, calculate the cost of reaching each neighbour and add them to the frontier with updated cost 
             explored.add(current_state)
 
-            #node_distances[current_state] = {'g(n)': g_n} # Save g(cost) for the current node in the dictionary
-            #print(node_distances, node_distances[current_state])
-
             for next in problem.valid_next(current_state):
-                #next_state = problem.result(current_state, action)
                 cost = current_node.path_cost + problem.step_cost(next)
-                next_node = Node(next, current_node, cost) #update the path cost
+                next_node = Node(next, current_node, cost) # update the path cost
                 frontier.put(next_node)
 
-    return None    # None, if no solution is found
+    return None    # no solution found
 
 # -------------------------------------------------------------------------------------------------
 
@@ -67,15 +60,15 @@ def astar_search(problem, heuristic):
     start_node = Node(problem.initial_state, None, 0, heuristic(problem.initial_state, problem.goal_state))
     frontier.put(start_node)
     explored = set()
-    node_distances = {}  # Dictionary to store g(n) and heuristic values for each node
-    node_solutions = {} # Dictionary to store path to reach each node from the starting node
+    node_distances = {} # dictionary to store g(n) and heuristic values for each node
+    node_solutions = {} # dictionary to store path to reach each node from the starting node
 
     while not frontier.empty():
         current_node = frontier.get()
         current_state = current_node.state
 
-        g_n = current_node.path_cost  # Save the g(n) value
-        h_n = current_node.heuristic  # Save the heuristic value
+        g_n = current_node.path_cost  # save the g(n) value
+        h_n = current_node.heuristic  # save the heuristic value
 
         
         if problem.goal_test(current_state):
@@ -86,15 +79,13 @@ def astar_search(problem, heuristic):
         if current_state not in explored:
             explored.add(current_state)
 
-            node_distances[current_state] = {'g(n)': g_n, 'h(n)': h_n} # Save g(cost) and heuristic values for the current node in the dictionary
-            node_solutions[current_state] = current_node.path() # Save path to reach that node inside dictionary
+            node_distances[current_state] = {'g(n)': g_n, 'h(n)': h_n} # save g(cost) and heuristic values for the current node in the dictionary
+            node_solutions[current_state] = current_node.path() # save path to reach that node inside dictionary
 
             for next in problem.valid_next(current_state): # iterate over possible next states from the current state
                 cost = current_node.path_cost + problem.step_cost(next)
-                # print(problem.step_cost(next))
                 heuristic_value = heuristic(next, problem.goal_state)
                 next_node = Node(next, current_node, cost, heuristic_value)
-                # print(next_node.state, cost)
                 frontier.put(next_node)
 
     return None
@@ -106,14 +97,14 @@ def greedy_best_first_search(problem, heuristic):
     start_node = Node(problem.initial_state, None, 0, heuristic(problem.initial_state, problem.goal_state))
     frontier.put(start_node)
     explored = set()
-    node_distances = {}  # Dictionary to store g(n) and heuristic values for each node
-    node_solutions = {} # Dictionary to store path to reach each node from the starting node
+    node_distances = {} # dictionary to store g(n) and heuristic values for each node
+    node_solutions = {} # dictionary to store path to reach each node from the starting node
 
     while not frontier.empty():
         current_node = frontier.get()
         current_state = current_node.state
 
-        h_n = current_node.heuristic  # Save the heuristic value
+        h_n = current_node.heuristic  # save the heuristic value
 
         if problem.goal_test(current_state):
             path = current_node.path()
@@ -122,8 +113,8 @@ def greedy_best_first_search(problem, heuristic):
         if current_state not in explored:
             explored.add(current_state)
 
-            node_distances[current_state] = {'h(n)': h_n} # Save heuristic value for the current node in the dictionary
-            node_solutions[current_state] = current_node.path() # Save path to reach that node inside dictionary
+            node_distances[current_state] = {'h(n)': h_n} # save heuristic value for the current node in the dictionary
+            node_solutions[current_state] = current_node.path() # save path to reach that node inside dictionary
 
             for next in problem.valid_next(current_state):
                 heuristic_value = heuristic(next, problem.goal_state)
@@ -136,32 +127,25 @@ def greedy_best_first_search(problem, heuristic):
 
 def onlineMode(problem, seq, current_state, m, mode, he_type):
 
-    if is_dead_end(problem, current_state, seq):#if it is dead end, it retrieves valid actions for the current state 
-        #print("dead")
+    if is_dead_end(problem, current_state, seq): # if it is dead end, backtrack
         valid_actions = problem.actions(current_state)
         best_action, next_state = backtrack(problem, current_state, valid_actions, seq)
         return best_action, next_state
 
-    if current_state in seq: # Prefers unseen states
-        #print('already seen', current_state)
-        valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # Removes actions that lead to already visited states
+    if current_state in seq: 
+        valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # removes actions that lead to already visited states
         best_action, next_state = select_best_action(problem, current_state, valid_actions, m, mode, he_type)
         return best_action, next_state
         
-    else: #if the current state is not in the sequence, it means it is a new state.
-        #print('new', current_state)
+    else: 
         valid_actions = problem.actions(current_state)
         best_action, next_state = select_best_action(problem, current_state, valid_actions, m, mode, he_type)
         return best_action, next_state
         
 
 def select_best_action(problem, current_state, valid_actions, m, mode, he_type):
-    #the function returns the best action among the valid actions and next state, 
-    #based on heuristic costs and the search mode
-    H_local = {} #empty dictionary to store the total costs associated with each valid action
-    for action in valid_actions:
-            #terates over each valid action and calculates the total cost for each action based on 
-            #the selected heuristic and search mode
+    H_local = {} # instantiate a set that stores the total costs associated with each valid action
+    for action in valid_actions: # iterates over each valid action and calculates the total cost for each action based on the selected heuristic and search mode          
             next_state = problem.result(current_state, action)
 
             monster = find_state_coord(problem.grid, ord(m))
@@ -178,8 +162,8 @@ def select_best_action(problem, current_state, valid_actions, m, mode, he_type):
 
             H_local[action] = total_cost
 
-    best_action = min(H_local, key=H_local.get) # Finds most efficient action
-    next_state = problem.result(current_state, best_action) # Calculates next state
+    best_action = min(H_local, key=H_local.get) # finds most efficient action
+    next_state = problem.result(current_state, best_action) # calculates next state
     print(f"Selected action: {best_action}, Total cost: {H_local[best_action]}")
     return best_action, next_state
 
@@ -190,11 +174,11 @@ def backtrack(problem, current_state, valid_actions, seq):
     
             H_local[action] = seq.index(next_state)
 
-    best_action = min(H_local, key=H_local.get) # Finds action that leads to state furtherst from the dead end
-    next_state = problem.result(current_state, best_action) # Calculates next state
+    best_action = min(H_local, key=H_local.get) # finds action that leads to furthest state from the dead end
+    next_state = problem.result(current_state, best_action) # calculates next state
     print(f"Selected action: {best_action}, Total cost: {H_local[best_action]}")
     return best_action, next_state
 
 def is_dead_end(problem, current_state, seq):
-    valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # Removes actions that lead to already visited states
-    return not valid_actions # Returns True if valid_actions is empty
+    valid_actions = [action for action in problem.actions(current_state) if problem.result(current_state, action) not in seq] # removes actions that lead to already visited states
+    return not valid_actions # returns True if valid_actions is empty

@@ -22,9 +22,9 @@ def generate_grid_problem(observation):
 
 def perform_search(level, search_agent, search_algorithm, distance_function=None):
 
-    if distance_function: # Informed search
+    if distance_function: # informed search
         solution_path, explored_nodes_paths, node_distances = search_agent.search(search_algorithm, distance_function)
-    else: # Uninformed search
+    else: # uninformed search
         solution_path = search_agent.search(search_algorithm)
 
     record_results(level, search_agent, solution_path)
@@ -53,17 +53,17 @@ def generate_comparison_dataframe(level):
 
 # -----------------------------------------------------------------------------------------------
 def perform_online_search(obs_lv, env_lv, monster_type, alg, heur_type):
-    # Instantiate the game map
+    # instantiate the game map
     game_map_lv = process_matrix(obs_lv['chars'])
     game_map_lv_colors = process_matrix(obs_lv['colors'])
     game_lv = obs_lv['pixel']
 
-    # Instantiate a problem from class GridWorldProblem
+    # instantiate a problem from class GridWorldProblem
     grid_problem = GridWorldProblem(game_map_lv, find_state_coord(game_map_lv, ord('@')), find_state_coord(game_map_lv, ord('>')), game_map_lv_colors)
 
     onlineSearchAgent = OnlineSearchAgent(grid_problem)
 
-    # Plot the game map
+    # plot the game map
     image = plt.imshow(game_lv[25:300, :250])
     
     agent = find_state_coord(grid_problem.grid, ord('@'))
@@ -73,13 +73,12 @@ def perform_online_search(obs_lv, env_lv, monster_type, alg, heur_type):
         print("Agent:", agent)
 
         valid_actions = grid_problem.actions(agent)
-        #print("Valid directions:", valid_actions)
 
         action, next_state = onlineSearchAgent.online_search(onlineMode, agent, monster_type, alg, heur_type)
 
-        grid, _, _, _ = env_lv.step(action) # Agent takes next step
-        new_game_map_lv4_1 = process_matrix(grid['chars']) # Memorize and cuts out the new map
-        grid_problem.update_grid(new_game_map_lv4_1) # Update grid
+        grid, _, _, _ = env_lv.step(action) # agent takes next step
+        new_game_map_lv4_1 = process_matrix(grid['chars']) # memorize and cuts out the new map
+        grid_problem.update_grid(new_game_map_lv4_1) # update grid
         agent = find_state_coord(grid_problem.grid, ord('@'))
 
         display.display(plt.gcf())

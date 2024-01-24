@@ -7,10 +7,9 @@ import matplotlib.image as mpimg
 
 def process_matrix(matrix):
     chars = {32, 0}
-    new_matrix = [[element for element in row if element not in chars] for row in matrix] #Removes 32 values from the matrix
-    new_matrix = [row for row in new_matrix if row]  #Removes empty rows    
-    new_matrix = np.array(new_matrix) #Convert to NumPy array
-    
+    new_matrix = [[element for element in row if element not in chars] for row in matrix] # removes value = 32 from the matrix
+    new_matrix = [row for row in new_matrix if row]  # removes empty rows    
+    new_matrix = np.array(new_matrix) 
     return new_matrix
 
 def find_state_coord(grid, value):
@@ -35,7 +34,7 @@ def cost_computation(grid, grid_colors, solution_path):
         terrain_type = grid[y][x]
         terrain_color = grid_colors[y][x]
 
-        if terrain_type == ord('.') and terrain_color == 6:  #Ice cell
+        if terrain_type == ord('.') and terrain_color == 6:  # ice cell
             cost += 3
         else:
             cost += 1
@@ -56,7 +55,6 @@ def diagonal_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float
     return 1 * (dx + dy) + (1 - 2 * 1) * min(dx, dy)    # D * (dx + dy) + (D2 - 2 * D) * min(dx, dy) 
 
 def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], distance_threshold=int, he_type=str) -> float:
-    
     if he_type == "euclidean":
         distance_to_goal = euclidean_distance(state, goal_position)
         distance_to_monster = euclidean_distance(state, monster_position)
@@ -68,7 +66,6 @@ def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monste
         total_heuristic = 2 * distance_to_goal - distance_to_monster
     else:
         total_heuristic = distance_to_goal
-    
     return round(total_heuristic, 3)
 
 # -----------------------------------------------------------------------------------------------
@@ -81,7 +78,7 @@ def create_basic_graph(problem, agent_pos):
             state = (x, y)
             terrain_color = problem.grid_colors[y][x]
 
-            if problem.grid[x][y] not in {ord('-'), ord('|')}:  # Excludes walls
+            if problem.grid[x][y] not in {ord('-'), ord('|')}:  # excludes walls
                 actions = problem.actions(state)
                 for action in actions:
                     result_state = problem.result(state, action)
@@ -93,25 +90,22 @@ def create_basic_graph(problem, agent_pos):
                                             else 'orange' if state in find_cells_coord(problem.grid, ord('d'))
                                             else 'blue' if state in find_cells_coord(problem.grid, ord('a'))
                                             else 'lightblue')
-
     return G
 
 def highlight_explored_nodes(G, explored_nodes):
     if G is not None:
         for node, data in G.nodes(data=True):
             G.nodes[node]['color'] = 'green' if node in explored_nodes else data['color']
-
     return G
 
 def highlight_explored_nodes_by_enemy(G, explored_nodes):
     if G is not None:
         for node, data in G.nodes(data=True):
             G.nodes[node]['color'] = 'blue' if node in explored_nodes else data['color']
-
     return G
 
 def plot_graph(G, save_path):
-    plt.ioff()  # Turn off interactive mode
+    plt.ioff()  # turn off interactive mode
     if G is not None:
         pos = {node: (node[0], -node[1]) for node in G.nodes()}
         labels = {node: node for node in G.nodes()}
@@ -124,12 +118,12 @@ def plot_graph(G, save_path):
                 node_color=node_colors, font_weight='bold', edge_color='gray')
 
         plt.title('Two-Dimensional State Space Graph with state coordinates')
-        plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
-        plt.savefig(save_path)  # Save the plot as an image file
+        plt.suptitle(subtitle, fontsize=12, color='blue')  # add a subtitle above the plot title
+        plt.savefig(save_path)  # save the plot as an image file
         plt.close()
 
 def plot_graph_distances(G, distances_dict, save_path):
-    plt.ioff()  # Turn off interactive mode
+    plt.ioff()  # turn off interactive mode
     if G is not None:
         pos = {node: (node[0], -node[1]) for node in G.nodes()}
         
@@ -145,7 +139,7 @@ def plot_graph_distances(G, distances_dict, save_path):
             elif 'h(n)' in node_dict:
                 labels[node] = (f"(NA, {node_dict['h(n)']})")
             else:
-                labels[node] = ""  # Use an empty string for both g(n) and h(n) if neither is present
+                labels[node] = ""  # use an empty string for both g(n) and h(n) if neither is present
         
         node_colors = [data['color'] for node, data in G.nodes(data=True)]
 
@@ -154,12 +148,12 @@ def plot_graph_distances(G, distances_dict, save_path):
                 node_color=node_colors, font_weight='bold', edge_color='gray')
 
         plt.title('Two-Dimensional State Space Graph with node distances')
-        plt.suptitle(subtitle, fontsize=12, color='blue')  # Add a subtitle above the plot title
-        plt.savefig(save_path)  # Save the plot as an image file
+        plt.suptitle(subtitle, fontsize=12, color='blue')  
+        plt.savefig(save_path) 
         plt.close()
 
 def display_saved_plots(plot_paths):
-    plt.ioff()  # Turn off interactive mode
+    plt.ioff() 
     
     num_plots = len(plot_paths)
 
@@ -171,6 +165,5 @@ def display_saved_plots(plot_paths):
         ax.set_title(f'{plot_path}')
         ax.axis('off')
 
-    plt.subplots_adjust(wspace=0.1) # Manually adjust horizontal spacing
-
+    plt.subplots_adjust(wspace=0.1) # manually adjust horizontal spacing
     plt.show()

@@ -54,7 +54,6 @@ BRANCH: (1,1,1,1),(2,2,2,2)
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
-
 # LEVEL 3
 des_file_static_lv3 = """
 MAZE: "mylevel", ' '
@@ -81,7 +80,6 @@ STAIR:(13, 13),down
 BRANCH: (1,1,1,1),(2,2,2,2)
 REGION: (0,0,20,80), lit, "ordinary"
 """
-
 
 #-------------------------------------------
 # Dynamic (monster)
@@ -142,7 +140,7 @@ MONSTER: ('a', "giant beetle"), (6,6), hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
-# LEVEL 5.1 # rat w/ dead_end - difficult
+# LEVEL 5.1 # rat w/ dead_end 
 des_file_static_lv5_1 = """
 MAZE: "mylevel", ' '
 FLAGS: premapped
@@ -170,7 +168,7 @@ MONSTER: ('r', "sewer rat"), (6,6), hostile
 REGION: (0,0,20,80), lit, "ordinary"
 """
 
-# LEVEL 5.2 # beetle w/ dead_end - difficult
+# LEVEL 5.2 # beetle w/ dead_end
 des_file_static_lv5_2 = """
 MAZE: "mylevel", ' '
 FLAGS: premapped
