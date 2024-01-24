@@ -3,8 +3,6 @@
 <img src="https://apre.it/wp-content/uploads/2021/01/logo_uni-pisa.png" width="200" />
 
 ## **LAVA\* | Algorithmic Voyages Through the Afterlife's Maze** 
-![Dante](https://emojis.sh/p/KkfzVv4nlz)
-</br></br>
-**Developed by:** [Veronica Pistolesi](https://github.com/VeronicaPistolesi), [Matilde contestabile](https://github.com/), [Derya Gemici](https://github.com/) and [Sofija Kotur](https://github.com/) \
+**Developed by:** [Veronica Pistolesi](https://github.com/VeronicaPistolesi), [Matilde Contestabile](https://github.com/matildeec), [Derya Gemici](https://github.com/DeryaGe) and [Sofija Kotur](https://github.com/sofija711) \
 **Academic year:** 2023/2024 \
 **Master degree:** Computer Science, Artificial Intelligence curriculum 
