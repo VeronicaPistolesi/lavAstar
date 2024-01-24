@@ -21,7 +21,7 @@ def breadth_first_search(problem):
             explored.add(current_state)
             
             for next in problem.valid_next(current_state): # iterate over possible next states from the current state
-                next_node = Node(next, current_node, 0)
+                next_node = Node(next, current_node, 0) #path cost is zero
                 frontier.put(next_node) # enques the next state and the updated path to the frontier
                 
     return None
@@ -55,7 +55,7 @@ def uniform_cost_search(problem): #dijkstra
             for next in problem.valid_next(current_state):
                 #next_state = problem.result(current_state, action)
                 cost = current_node.path_cost + problem.step_cost(next)
-                next_node = Node(next, current_node, cost)
+                next_node = Node(next, current_node, cost) #update the path cost
                 frontier.put(next_node)
 
     return None    # None, if no solution is found
@@ -136,7 +136,7 @@ def greedy_best_first_search(problem, heuristic):
 
 def onlineMode(problem, seq, current_state, m, mode, he_type):
 
-    if is_dead_end(problem, current_state, seq):
+    if is_dead_end(problem, current_state, seq):#if it is dead end, it retrieves valid actions for the current state 
         #print("dead")
         valid_actions = problem.actions(current_state)
         best_action, next_state = backtrack(problem, current_state, valid_actions, seq)
@@ -148,7 +148,7 @@ def onlineMode(problem, seq, current_state, m, mode, he_type):
         best_action, next_state = select_best_action(problem, current_state, valid_actions, m, mode, he_type)
         return best_action, next_state
         
-    else:
+    else: #if the current state is not in the sequence, it means it is a new state.
         #print('new', current_state)
         valid_actions = problem.actions(current_state)
         best_action, next_state = select_best_action(problem, current_state, valid_actions, m, mode, he_type)
@@ -156,8 +156,12 @@ def onlineMode(problem, seq, current_state, m, mode, he_type):
         
 
 def select_best_action(problem, current_state, valid_actions, m, mode, he_type):
-    H_local = {}
+    #the function returns the best action among the valid actions and next state, 
+    #based on heuristic costs and the search mode
+    H_local = {} #empty dictionary to store the total costs associated with each valid action
     for action in valid_actions:
+            #terates over each valid action and calculates the total cost for each action based on 
+            #the selected heuristic and search mode
             next_state = problem.result(current_state, action)
 
             monster = find_state_coord(problem.grid, ord(m))

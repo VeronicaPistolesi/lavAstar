@@ -9,15 +9,15 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         self.height = len(grid) # columns
         self.initial_state = initial_state
         self.goal_state = goal_state
-        self.obstacles = {ord('-'), ord('|'), ord('}'), ord('r')}
+        self.obstacles = {ord('-'), ord('|'), ord('}'), ord('r')}#set of obstacles that can be found in a grid, saved as a ASCII code
     
     def valid_next(self, state): #Returns a list of all valid next states
-        x, y = state
+        x, y = state #get the coordinates of the current state
         possible_next_states = [(x, y-1), (x+1, y), (x, y+1), (x-1, y), (x+1, y-1), (x+1, y+1), (x-1, y+1), (x-1, y-1)] #N E S W NE SE SW NW
         return [next for next in possible_next_states if self.is_valid(next)]
     
     def actions(self, state): # Returns a list of valid actions that can be executed in the given state
-        x, y = state
+        x, y = state #get the coordinates of the current state
         valid_next = self.valid_next(state)
         action_map = {
             (x, y-1): 0, #N
@@ -31,7 +31,8 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
         }
         #possible_next_states = [(x+1, y), (x-1, y), (x, y+1), (x, y-1)] #E W S N
         #valid_next = [next for next in possible_next_states if self.is_valid(next)]
-        valid_dirs = [action_map[next] for next in valid_next]
+        valid_dirs = [action_map[next] for next in valid_next] # creates a list, by mapping each valid neighboring state from valid_next 
+        #to the corresponding direction integer using the action_map dictionary.
         return valid_dirs
     
     def result(self, state, action): # Returns the state that results from executing the action in the given state (=the transition model)
@@ -47,7 +48,8 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
             7: (x-1, y-1) # NW
         }
 
-        next = action_map.get(action, state)
+        next = action_map.get(action, state) #to retrieve the next state based on the action. 
+        #if the action is not found in the dictionary, it defaults to the current state.
         return next if self.is_valid(next) else state
 
     def goal_test(self, state) -> bool: # Returns True if state is the goal
@@ -56,7 +58,7 @@ class GridWorldProblem: #Each cell in the grid is a state in the problem, and mo
     def is_valid(self, state) -> bool: #Returns true if the state is valid to step on
         x, y = state
         return 0 <= x < self.width and 0 <= y < self.height and self.grid[y][x] not in self.obstacles
-    
+    #it checks if the coordinates are in the grid and if the grid cell at the given coordinates does not contain an obstacle
     def step_cost(self, state): # Assigns cost 1 to based on the terrain type
         x, y = state
         terrain_type = self.grid[y][x]
@@ -89,7 +91,8 @@ class Node: #We consider the grid as a graph for our search problem
         while node.parent is not None:
             path_back.append(node.state)
             node = node.parent
-        return list(reversed(path_back))
+        return list(reversed(path_back))# This is done because the path was constructed by appending states from the goal node to the root, 
+    #and reversing it gives the path from the root to the goal.
 
     def __lt__(self, other): # Compare nodes in the queue based on their total cost (path cost + heuristic)
         return (self.path_cost + self.heuristic) < (other.path_cost + other.heuristic)
@@ -103,7 +106,7 @@ class SimpleSearchAgent:
 
     def execution_time(self):
         return round(self._execution_time, 6)
-        
+    #############Subcalsses##############    
 class UninformedSearchAgent(SimpleSearchAgent):
     def __init__(self, problem):
         super().__init__(problem)
