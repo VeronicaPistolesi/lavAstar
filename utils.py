@@ -5,49 +5,6 @@ import networkx as nx
 import math
 import matplotlib.image as mpimg
 
-# useful for offline search
-def actions_from_path(start: Tuple[int, int], path: List[Tuple[int, int]]) -> List[int]:
-    action_map = {
-        "N": 0,
-        "E": 1,
-        "S": 2,
-        "W": 3,
-        "NE": 4,
-        "SE": 5,
-        "SW": 6,
-        "NW": 7
-    }
-    actions = []
-    # x_s, y_s = start
-    x_s, y_s = start
-    for (x, y) in path:
-        if x_s > x:
-            if y_s > y:
-                actions.append(action_map["NW"])
-            elif y_s == y:
-                actions.append(action_map["W"])
-            elif y_s < y:
-                actions.append(action_map["SW"])
-        elif x_s < x:
-            if y_s > y:
-                actions.append(action_map["NE"])
-            elif y_s == y:
-                actions.append(action_map["E"])
-            elif y_s < y:
-                actions.append(action_map["SE"])
-        elif x_s == x:
-            if y_s > y:
-                actions.append(action_map["N"])
-            elif y_s < y:
-                actions.append(action_map["S"])
-            
-        x_s = x
-        y_s = y
-    
-    return actions
-
-# ------------------------------------------------------------------------------------------------------------
-
 def process_matrix(matrix):
     chars = {32, 0}
     new_matrix = [[element for element in row if element not in chars] for row in matrix] #Removes 32 values from the matrix
@@ -89,7 +46,7 @@ def cost_computation(grid, grid_colors, solution_path):
 def euclidean_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float:
     x1, y1 = point1
     x2, y2 = point2
-    return round(math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2), 3) # do not round to integer!
+    return round(math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2), 3)
 
 def diagonal_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float:
     x1, y1 = point1
@@ -97,13 +54,10 @@ def diagonal_distance(point1: Tuple[int, int], point2: Tuple[int, int]) -> float
     dx = abs(x1 - x2)
     dy = abs(y1 - y2)
     return 1 * (dx + dy) + (1 - 2 * 1) * min(dx, dy)    # D * (dx + dy) + (D2 - 2 * D) * min(dx, dy) 
-                                                        # When D = 1 and D2 = 1, this is called the Chebyshev distance. 
-                                                        # When D = 1 and D2 = sqrt(2), this is called the octile distance. (diagonal movements unpreferred)
 
-#I tried to write a new heuristic that takes into account the monster position and assigns to it a different weight depending on how far away it is from the agent.
-def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], distance_threshold=int, he_type=str) -> float: # 3 rat, 2 beetle   # monster_influence_factor=3
+def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monster_position: Tuple[int, int], distance_threshold=int, he_type=str) -> float:
     
-    if he_type == "euclidean":                                                                                                                                      # old 5 x rat, 2 x beetle
+    if he_type == "euclidean":
         distance_to_goal = euclidean_distance(state, goal_position)
         distance_to_monster = euclidean_distance(state, monster_position)
     elif he_type == "diagonal":
@@ -114,10 +68,8 @@ def heuristic_dyn(state: Tuple[int, int], goal_position: Tuple[int, int], monste
         total_heuristic = 2 * distance_to_goal - distance_to_monster
     else:
         total_heuristic = distance_to_goal
-
-    #print(state, distance_to_goal, distance_to_monster, total_heuristic)
     
-    return round(total_heuristic, 3) # do not round to integer!
+    return round(total_heuristic, 3)
 
 # -----------------------------------------------------------------------------------------------
 
@@ -219,7 +171,6 @@ def display_saved_plots(plot_paths):
         ax.set_title(f'{plot_path}')
         ax.axis('off')
 
-    # Manually adjust horizontal spacing
-    plt.subplots_adjust(wspace=0.1)
+    plt.subplots_adjust(wspace=0.1) # Manually adjust horizontal spacing
 
     plt.show()

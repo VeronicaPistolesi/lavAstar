@@ -6,8 +6,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import IPython.display as display
 
-
-
 algorithms = ['Breadth First Search (UA)', 'Uniform Cost Search (UA)', 'A* (IA)', 'Greedy Best First Search (IA)']
 
 time_levels = [[], [], [], []]
